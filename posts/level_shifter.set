@@ -1,0 +1,4 @@
+Reading 1.8V flash with Raspberry Pi
+Use Logic Level Shifter to read the flash operating under 3.3V.
+Gyul
+2024-04-13
