@@ -72,11 +72,13 @@
                                 <h2 class="post-title">{{ head[1] }}</h2>
                                 <h3 class="post-subtitle">{{ head[2] }}</h3>
                             </a>
-                            <p class="post-meta">
-                                Posted by
-                                <a href="#!"> {{ head[3] }}</a>
-                                on {{ head[4] }}
-                            </p>
+							<p class="post-meta">
+								Posted by
+								<a href="{% if head[3] == 'Gyul' %}/author/gyul{% else %}#!{% endif %}" style="color: black;">
+									{{ head[3] }}
+								</a>
+								on {{ head[4] }}
+							</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -113,7 +115,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <div class="small text-center text-muted fst-italic">Copyright &copy; FirmExtract 2021</div>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; FirmExtract 2024</div>
                     </div>
                 </div>
             </div>

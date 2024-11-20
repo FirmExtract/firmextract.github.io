@@ -47,7 +47,7 @@
                             <h2 class="subheading"> {{ head[1] }}</h2>
                             <span class="meta">
                                 Posted by
-                                <a href="#!" style="color: black;"> {{ head[2] }}</a>
+                                <a href="{% if head[2] == 'Gyul' %}/author/gyul{% else %}#!{% endif %}" style="color: black;"> {{ head[2] }}</a>
                                 on {{ head[3] }}
                             </span>
                         </div>
@@ -61,7 +61,7 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         {{ text }}
-                        <div class="small text-center text-muted fst-italic">Copyright &copy; FirmExtract 2021</div>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; FirmExtract 2024</div>
                     </div>
                 </div>
             </div>
