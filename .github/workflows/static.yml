@@ -45,7 +45,11 @@ jobs:
         run: |
           python app.py
       - name: Setup Pages
-        uses: actions/configure-pages@v3                                                                                                                                                                                                                                           - name: Upload artifact                                                                                                                                                                                                                                                        uses: actions/upload-pages-artifact@v2                                                                                                                                                                                                                                       with:                                                                                                                                                                                                                                                                          # Upload entire repository
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload entire repository
           path: 'static/'
       - name: Deploy to GitHub Pages
         id: deployment
