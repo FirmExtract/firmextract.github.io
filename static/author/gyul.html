@@ -2,8 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport"
-              content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>FirmExtract</title>
@@ -12,113 +11,301 @@
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <link rel="manifest" href="/site.webmanifest">
         <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"
-                crossorigin="anonymous"></script>
+        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic"
-              rel="stylesheet"
-              type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
-              rel="stylesheet"
-              type="text/css" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="/css/styles.css" rel="stylesheet" />
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                color: #374151;
+            }
+            
+            .cv-container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            
+            .cv-header {
+                margin-bottom: 3rem;
+            }
+            
+            .cv-name {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: #1F2937;
+                margin-bottom: 1rem;
+            }
+            
+            .cv-subtitle {
+                font-size: 1.2rem;
+                color: #6B7280;
+                margin-bottom: 1.5rem;
+            }
+            
+            .social-links {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .social-link {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 1rem;
+                background: #F3F4F6;
+                border-radius: 6px;
+                color: #4B5563;
+                text-decoration: none;
+                transition: all 0.2s;
+            }
+            
+            .social-link:hover {
+                background: #E5E7EB;
+                transform: translateY(-2px);
+            }
+            
+            .section {
+                margin-bottom: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #1F2937;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid #E5E7EB;
+                margin-bottom: 1.5rem;
+            }
+            
+            .entry-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .entry-item {
+                margin-bottom: 0.75rem;
+                padding: 1rem;
+                background: #F9FAFB;
+                border-radius: 8px;
+                transition: all 0.2s;
+            }
+            
+            .entry-item:hover {
+                transform: translateX(5px);
+                background: #F3F4F6;
+            }
+            
+            .entry-title {
+                font-weight: 600;
+                color: #1F2937;
+                margin-bottom: 0.25rem;
+            }
+            
+            .entry-subtitle {
+                color: #6B7280;
+                font-size: 0.9rem;
+            }
+            
+            .entry-description {
+                margin-top: 0.5rem;
+                color: #4B5563;
+            }
+            
+            .vulnerability-item {
+                background: #F9FAFB;
+                padding: 1rem;
+                border-radius: 8px;
+                margin-bottom: 0.75rem;
+                transition: all 0.2s;
+                border-left: 4px solid #3B82F6;
+            }
+            
+            .vulnerability-item:hover {
+                transform: translateX(5px);
+                background: #F3F4F6;
+            }
+            
+            .award-item {
+                background: #F9FAFB;
+                padding: 1rem;
+                border-radius: 8px;
+                border-left: 4px solid #3B82F6;
+                margin-bottom: 0.75rem;
+                transition: all 0.2s;
+            }
+            
+            .award-item:hover {
+                transform: translateX(5px);
+                background: #F3F4F6;
+            }
+            
+            .show-more {
+                text-align: center;
+                color: #6B7280;
+                font-style: italic;
+                margin-top: 1rem;
+            }
+        </style>
     </head>
     <body>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-            <div class="container px-4 px-lg-5"
-                 style="padding-right: 8rem !important;
-                        padding-left: 8rem !important">
+            <div class="container px-4 px-lg-5" style="padding-right: 8rem !important; padding-left: 8rem !important">
                 <a class="navbar-brand" href="/">
-					<img src="/Logo.png" width="190" height="33">
-				</a>
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarResponsive"
-                        aria-controls="navbarResponsive"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
+                    <img src="/Logo.png" width="190" height="33">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link px-lg-4 py-3 py-lg-4"
-                               href="/"
-                               style="color: black">Home</a>
+                            <a class="nav-link px-lg-4 py-3 py-lg-4" href="/" style="color: black">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-lg-4 py-3 py-lg-4"
-                               href="/about"
-                               style="color: black">About</a>
+                            <a class="nav-link px-lg-4 py-3 py-lg-4" href="/about" style="color: black">About</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        
+
         <!-- CV Content-->
         <main class="mb-4">
-            <div class="container px-4 px-lg-5" style="margin-top: 100px;">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <h1 class="mb-4" style="color: slategray;">Hyunsik Kim</h1>
-                        
-                        <h2>Education</h2>
-                        <ul>
-                            <li><strong>Sunrin Internet High School</strong> - 2020.02 - 2023.02</li>
-                        </ul>
-
-                        <h2 class="mt-4">Experience</h2>
-                        <ul>
-                            <li><strong>Dreamhack Contents Creater(Embedded, Hardware Hacking)</strong> - Theori, 2023.02 - 2023.08</li>
-                            <li><strong>RedTeam</strong> - AutoCrypt, 2024.09 - Now</li>
-                        </ul>
-
-                        <h2 class="mt-4">Vulnerability Reports</h2>
-                        <ul>
-                            <li><strong>KVE-2021-1986</strong> - Reported to KISA, 2021, IP Camera RCE</li>
-                            <li><strong>KVE-2022-0004</strong> - Reported to KISA, 2021, Wifi Router RCE</li>
-                            <li><strong>KVE-2022-0098</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0141</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0142</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0141</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0142</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0157</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0219</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0230</strong> - Reported to KISA, 2021</li>
-                            <li><strong>KVE-2022-0245</strong> - Reported to KISA, 2021</li>
-                            ...
-                        </ul>
-
-                        <h2 class="mt-4">Honors and Awards</h2>
-                        <ul>
-                            <li><strong>1st</strong> - WhiteHat Contest, 2021</li>
-                            <li><strong>1st</strong> - WACON CTF, 2022</li>
-                            <li><strong>3rd</strong> - Cyber Conflict Exercise(CCE), 2022</li>
-                            <li><strong>1st</strong> - CyberGuardians CTF, 2022</li>
-                            <li><strong>1st</strong> - The Hacking Championship Junior, 2022</li>
-                            <li><strong>1st</strong> - WhiteHat Contest, 2022</li>
-                            <li><strong>8th</strong> - Hack The Drone CTF, 2024</li>
-                        </ul>
-
-                        <h2 class="mt-4">Talks</h2>
-                        <ul>
-                            <li><strong>How to find vulnerabilities in IP Camera</strong> - CodeEngn Conference 18, 2022</li>
-                        </ul>
-
-                        <h2 class="mt-4">Organizer</h2>
-                        <ul>
-                            <li><strong>Layer7 CTF</strong> - Role as Organizer, 2021</li>
-                            <li><strong>Dreamhack CTF</strong> - Role as Organizer, 2023</li>
-                        </ul>
+            <div class="cv-container">
+                <header class="cv-header">
+                    <h1 class="cv-name">Hyunsik Kim</h1>
+                    <div class="cv-subtitle">Security Researcher</div>
+                    <div class="social-links">
+                        <a href="https://x.com/GGyul_E" target="_blank" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                            Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/in/%ED%98%84%EC%8B%9D-%EA%B9%80-aa4a29221/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                            LinkedIn
+                        </a>
                     </div>
-                </div>
+                </header>
+
+                <section class="section">
+                    <h2 class="section-title">Education</h2>
+                    <ul class="entry-list">
+                        <li class="entry-item">
+                            <div class="entry-title">Sunrin Internet High School</div>
+                            <div class="entry-subtitle">2020.02 - 2023.02</div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Experience</h2>
+                    <ul class="entry-list">
+                        <li class="entry-item">
+                            <div class="entry-title">RedTeam - AutoCrypt</div>
+                            <div class="entry-subtitle">2024.09 - Present</div>
+                        </li>
+                        <li class="entry-item">
+                            <div class="entry-title">Dreamhack Contents Creator</div>
+                            <div class="entry-subtitle">Theori | 2023.02 - 2023.08</div>
+                            <div class="entry-description">Embedded, Hardware Hacking</div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Vulnerability Reports</h2>
+                    <ul class="entry-list">
+                        <li class="vulnerability-item">
+                            <div class="entry-title">KVE-2021-1986</div>
+                            <div class="entry-subtitle">IP Camera RCE</div>
+                        </li>
+                        <li class="vulnerability-item">
+                            <div class="entry-title">KVE-2022-0004</div>
+                            <div class="entry-subtitle">Wifi Router RCE</div>
+                        </li>
+                        <li class="vulnerability-item">
+                            <div class="entry-title">KVE-2022-0098</div>
+                        </li>
+                        <li class="vulnerability-item">
+                            <div class="entry-title">KVE-2022-0141</div>
+                        </li>
+                        <li class="vulnerability-item">
+                            <div class="entry-title">KVE-2022-0142</div>
+                        </li>
+                    </ul>
+                    <div class="show-more">
+                        ...
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Honors and Awards</h2>
+                    <ul class="entry-list">
+                        <li class="award-item">
+                            <div class="entry-title">WhiteHat Contest</div>
+                            <div class="entry-subtitle">1st Place • 2022</div>
+                        </li>
+                        <li class="award-item">
+                            <div class="entry-title">WACON CTF</div>
+                            <div class="entry-subtitle">1st Place • 2022</div>
+                        </li>
+                        <li class="award-item">
+                            <div class="entry-title">CyberGuardians CTF</div>
+                            <div class="entry-subtitle">1st Place • 2022</div>
+                        </li>
+                        <li class="award-item">
+                            <div class="entry-title">The Hacking Championship Junior</div>
+                            <div class="entry-subtitle">1st Place • 2022</div>
+                        </li>
+                        <li class="award-item">
+                            <div class="entry-title">Cyber Conflict Exercise</div>
+                            <div class="entry-subtitle">3rd Place • 2022</div>
+                        </li>
+                        <li class="award-item">
+                            <div class="entry-title">Hack The Drone CTF</div>
+                            <div class="entry-subtitle">8th Place • 2024</div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Talks</h2>
+                    <ul class="entry-list">
+                        <li class="entry-item">
+                            <div class="entry-title"><a href="https://www.youtube.com/watch?v=LUAA87lcB14" style="color: black">How to find vulnerabilities in IP Camera</a></div>
+                            <div class="entry-subtitle">CodeEngn Conference 18 • 2022</div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Organizer</h2>
+                    <ul class="entry-list">
+                        <li class="entry-item">
+                            <div class="entry-title">Layer7 CTF</div>
+                            <div class="entry-subtitle">Role as Organizer • 2021</div>
+                        </li>
+                        <li class="entry-item">
+                            <div class="entry-title">Dreamhack CTF</div>
+                            <div class="entry-subtitle">Role as Organizer in Theori • 2023</div>
+                        </li>
+                    </ul>
+                </section>
             </div>
         </main>
+
         <!-- Footer-->
         <footer class="border-top">
             <div class="container px-4 px-lg-5">
@@ -162,4 +349,3 @@
         <script src="js/scripts.js"></script>
     </body>
 </html>
-
