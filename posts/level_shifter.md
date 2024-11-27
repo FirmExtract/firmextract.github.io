@@ -14,7 +14,9 @@ Unfortunately the package is WSON-8. So there's no way to connect to the chip le
 ## Logic Level shifter
 I bought a 8 Channel Level shifter(TXS0108E) which is made at Sparkfun.
 It has Supply Voltage Range as below. And it should be always `VB` >= `VA` when use.
-* `VA` : **1.4V** to **3.6V**
+
+
+* `VA` : **1.4V** to **3.6V**<br>
 * `VB` : **1.65V** to **5.5V**
 
 So if we send signal with 3.3V in `B1`, the signal will be sent with 1.8 in `A1`. This is what Level shifter does.
@@ -44,9 +46,11 @@ And lastly I connected Raspberry pi's SPI interface pins with Level shifter.
 After all the connections, I read the flash memory using `spidev` module in python. I couldn't use `flashrom` as it doesn't support this chip(`F50D1G4L8`).
 
 This chip reads data per page using `13h` opcode. Then the datas are saved in the cache. The instruction sends as below.
-* **Command (**13h**) + 8bits dummy + 16bits addresss
+
+* Command (**13h**) + 8bits dummy + 16bits addresss
   
 So we have to read the cache using `03h` opcode to actually read the datas. The instruction sends as below.
+
 * Command (**03h**) + 4bits dummy + 12bits address + 8bits dummy
 
 But we can leave the address zero after command(**03h**). Because we don't need to set the address of the cache. But what we have to change everytime is the page address above(**13h**).
