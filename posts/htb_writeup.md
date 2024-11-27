@@ -594,7 +594,7 @@ crc = calculateCRC32(buffer, sizeof(SmartLockEvent));
 memcpy(buffer + sizeof(SmartLockEvent), &crc, sizeof(crc));
 ```
 
-    * After moving `event` and `crc` value to `buffer`, it goes to `write_to_flash()`. And in `write_to_flash()`, they encrypt `buffer` by using `encrypt_data()` and write it on the flash.
+* After moving `event` and `crc` value to `buffer`, it goes to `write_to_flash()`. And in `write_to_flash()`, they encrypt `buffer` by using `encrypt_data()` and write it on the flash.
 
 ```
     // Write the buffer to flash
@@ -616,7 +616,7 @@ void write_to_flash(uint32_t sector, uint32_t address, uint8_t *data, size_t len
 }
 ```
 
-    * `encrypt_data()` first read `security_register` using `read_security_register()` and save it on `key`. And xor with `data` which is doing encryption. But they leave the crc value same.
+* `encrypt_data()` first read `security_register` using `read_security_register()` and save it on `key`. And xor with `data` which is doing encryption. But they leave the crc value same.
 
 ```
 // encrypts log events 
@@ -749,7 +749,7 @@ uint32_t calculateCRC32(const uint8_t *data, size_t length) {
 }        
 ```
 
-    * I just ran the C code with my edited log value. So that I can get the new crc. Check out `Figure17`.
+* I just ran the C code with my edited log value. So that I can get the new crc. Check out `Figure17`.
 
 ```
 #include <stdio.h>
