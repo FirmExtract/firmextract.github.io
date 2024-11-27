@@ -9,6 +9,7 @@ There are many ctfs held right now. But it's hard to see the **Hardware** catego
 * This challenge gives you a filesystem of the printer. So basicially it's analyzing printer's filesystem and get the flag. The files in the filesystem looks like `Figure1`.
 
 Figure 1 :
+
 ```
 fs
 ├─PJL
@@ -134,6 +135,7 @@ def exchange(hex_list, value=0):
 jedec_id = exchange([0x9F], 3)
 print(jedec_id)
 ```
+
 ## Exploitation
 * Let's use `exchange()` function to pass the instruction. Check `Figure9`. I imported *pwn* to use `remote()` to connect to server. And changed `sendall()` to `send()`. Lastly, I passed [0x03, 0x00, 0x00, 0x00] and recieved 10200 bytes to read whole things in the flash.
 * Below code is for getting flag in the output. I used `join()` with list comprehension to get a flag with string.
@@ -572,6 +574,7 @@ print(jedec_id)
             uint8_t status;       // Numeric code for status (success, failure)
         } SmartLockEvent;
         ```
+
 * `SmartLockEvent event` goes to `buffer`. and `buffer` goes to `write_to_flash()`.
     * `buffer` list has `SmartLockEvent` size + 4. Because the crc which has 4 bytes size is following with `event` value in `buffer`. And the crc is generated with `calculateCRC32()`.
 
@@ -590,6 +593,7 @@ print(jedec_id)
         // Append CRC to the buffer
         memcpy(buffer + sizeof(SmartLockEvent), &crc, sizeof(crc));
         ```
+
     * After moving `event` and `crc` value to `buffer`, it goes to `write_to_flash()`. And in `write_to_flash()`, they encrypt `buffer` by using `encrypt_data()` and write it on the flash.
 
         ```
@@ -611,6 +615,7 @@ print(jedec_id)
 
         }
         ```
+
     * `encrypt_data()` first read `security_register` using `read_security_register()` and save it on `key`. And xor with `data` which is doing encryption. But they leave the crc value same.
 
         ```
@@ -643,6 +648,7 @@ print(jedec_id)
 
         }
         ```
+
 * So when the `log_event()` called, they make crc based on the `SmartLockEvent` structure. And enrypt the value of structure using `security_register`. Lastly write it on the flash. Then what we have to do is to decrypt the value in flash and edit the user_id in the structure. And regenerate crc for the integrity.
     * How can we get `security_register` value? It is written in the W25Q128 [datasheet](https://pdf1.alldatasheet.com/datasheet-pdf/view/506494/WINBOND/W25Q128FV.html). Yes as always. In page 70, there is *Read Security Registers* page. It says that we can read a security register using `0x48` command and pass 24-bit address and 1 dummy byte. The code was reading first security register at 0x52.
 
@@ -725,6 +731,7 @@ int log_event(const SmartLockEvent event, uint32_t sector, uint32_t address) {
 ## Exploitation
 * We can get the `key` value using 0x48 command. So now we can decrypt the flash data. But the problem is crc. Let's check how crc is generated.
     * It is not that complicate. Just xor and shifting. To generate the crc with the edited log value, I chose to just make the C code same as this one.
+
         ```
         // CRC-32 calculation function
         uint32_t calculateCRC32(const uint8_t *data, size_t length) {
@@ -741,7 +748,9 @@ int log_event(const SmartLockEvent event, uint32_t sector, uint32_t address) {
             return ~crc;
         }        
         ```
+
     * I just ran the C code with my edited log value. So that I can get the new crc. Check out `Figure17`.
+
         ```
         #include <stdio.h>
         #include <stdint.h>
@@ -788,6 +797,7 @@ int log_event(const SmartLockEvent event, uint32_t sector, uint32_t address) {
             return 0;
         }
         ```
+
 * Check out `Figure18` to see the final exploit code. I first read the security register and 0x9c0 where the `user_id` 0x5244 is placed.
     * If you want to write new data in the flash, you have to erase that area and write it. Not overwrite. So we got to remove the data in 0x9c0 but it wasn't available to remove only that part. But to just erase by Sector(0x1000 bytes).
 * And then I cleared the logs with `user_id` 0x5244 only. I've done it with reading whole logs and erase the flash, and then write the logs that I read except `user_id` 0x5244 logs. So that's what `erase_only_specific()` does.
