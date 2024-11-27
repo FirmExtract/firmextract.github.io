@@ -83,7 +83,7 @@ Cool! Time to test it!
 
 Working perfectly at once.
 
-## Makeing Web Server
+## Making Web Server
 
 Now let's make it as a web server.
 
