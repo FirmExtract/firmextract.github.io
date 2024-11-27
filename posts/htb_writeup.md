@@ -562,6 +562,7 @@ print(jedec_id)
 ## Solution
 * What we have to see in `log_event.c` is how logging works. And we can check it at `log_event()`. Check out `Figure16`. It takes 3 argument. `const SmartLockEvent event`, `uint32_t sector`, `uint32_t address`. 
     * We can assume that `sector` and `address` is for flash addressing. So let's check what `SmartLockEvent event` structure does. It has several items for event log. And especially there is `userId` which we have to edit.
+
         ``` 
         typedef struct {
             uint32_t timestamp;   // Timestamp of the event
@@ -573,6 +574,7 @@ print(jedec_id)
         ```
 * `SmartLockEvent event` goes to `buffer`. and `buffer` goes to `write_to_flash()`.
     * `buffer` list has `SmartLockEvent` size + 4. Because the crc which has 4 bytes size is following with `event` value in `buffer`. And the crc is generated with `calculateCRC32()`.
+
         ```
         uint8_t buffer[sizeof(SmartLockEvent) + sizeof(uint32_t)]; // Buffer for event and CRC
         uint32_t crc;
@@ -589,6 +591,7 @@ print(jedec_id)
         memcpy(buffer + sizeof(SmartLockEvent), &crc, sizeof(crc));
         ```
     * After moving `event` and `crc` value to `buffer`, it goes to `write_to_flash()`. And in `write_to_flash()`, they encrypt `buffer` by using `encrypt_data()` and write it on the flash.
+
         ```
             // Write the buffer to flash
             write_to_flash(sector, address, buffer, sizeof(buffer));         
@@ -609,6 +612,7 @@ print(jedec_id)
         }
         ```
     * `encrypt_data()` first read `security_register` using `read_security_register()` and save it on `key`. And xor with `data` which is doing encryption. But they leave the crc value same.
+
         ```
         // encrypts log events 
         void encrypt_data(uint8_t *data, size_t data_length, uint8_t register_number, uint32_t address) {
