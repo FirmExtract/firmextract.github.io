@@ -565,89 +565,89 @@ print(jedec_id)
 * What we have to see in `log_event.c` is how logging works. And we can check it at `log_event()`. Check out `Figure16`. It takes 3 argument. `const SmartLockEvent event`, `uint32_t sector`, `uint32_t address`. 
     * We can assume that `sector` and `address` is for flash addressing. So let's check what `SmartLockEvent event` structure does. It has several items for event log. And especially there is `userId` which we have to edit.
 
-        ``` 
-        typedef struct {
-            uint32_t timestamp;   // Timestamp of the event
-            uint8_t eventType;    // Numeric code for type of event // 0 to 255 (0xFF)
-            uint16_t userId;      // Numeric user identifier // 0 t0 65535      (0xFFFF)
-            uint8_t method;       // Numeric code for unlock method
-            uint8_t status;       // Numeric code for status (success, failure)
-        } SmartLockEvent;
-        ```
+``` 
+typedef struct {
+    uint32_t timestamp;   // Timestamp of the event
+    uint8_t eventType;    // Numeric code for type of event // 0 to 255 (0xFF)
+    uint16_t userId;      // Numeric user identifier // 0 t0 65535      (0xFFFF)
+    uint8_t method;       // Numeric code for unlock method
+    uint8_t status;       // Numeric code for status (success, failure)
+} SmartLockEvent;
+```
 
 * `SmartLockEvent event` goes to `buffer`. and `buffer` goes to `write_to_flash()`.
     * `buffer` list has `SmartLockEvent` size + 4. Because the crc which has 4 bytes size is following with `event` value in `buffer`. And the crc is generated with `calculateCRC32()`.
 
-        ```
-        uint8_t buffer[sizeof(SmartLockEvent) + sizeof(uint32_t)]; // Buffer for event and CRC
-        uint32_t crc;
+```
+uint8_t buffer[sizeof(SmartLockEvent) + sizeof(uint32_t)]; // Buffer for event and CRC
+uint32_t crc;
 
-        memset(buffer, 0, sizeof(SmartLockEvent) + sizeof(uint32_t));
+memset(buffer, 0, sizeof(SmartLockEvent) + sizeof(uint32_t));
 
-        // Serialize the event
-        memcpy(buffer, &event, sizeof(SmartLockEvent));
+// Serialize the event
+memcpy(buffer, &event, sizeof(SmartLockEvent));
 
-        // Calculate CRC for the serialized event
-        crc = calculateCRC32(buffer, sizeof(SmartLockEvent));
+// Calculate CRC for the serialized event
+crc = calculateCRC32(buffer, sizeof(SmartLockEvent));
 
-        // Append CRC to the buffer
-        memcpy(buffer + sizeof(SmartLockEvent), &crc, sizeof(crc));
-        ```
+// Append CRC to the buffer
+memcpy(buffer + sizeof(SmartLockEvent), &crc, sizeof(crc));
+```
 
     * After moving `event` and `crc` value to `buffer`, it goes to `write_to_flash()`. And in `write_to_flash()`, they encrypt `buffer` by using `encrypt_data()` and write it on the flash.
 
-        ```
-            // Write the buffer to flash
-            write_to_flash(sector, address, buffer, sizeof(buffer));         
+```
+    // Write the buffer to flash
+    write_to_flash(sector, address, buffer, sizeof(buffer));         
 
-        ...
+...
 
-        void write_to_flash(uint32_t sector, uint32_t address, uint8_t *data, size_t length) {
-            printf("Writing to flash at sector %u, address %u\n", sector, address);
-            
-            uint8_t i;
-            uint16_t n;  
+void write_to_flash(uint32_t sector, uint32_t address, uint8_t *data, size_t length) {
+    printf("Writing to flash at sector %u, address %u\n", sector, address);
+    
+    uint8_t i;
+    uint16_t n;  
 
-            encrypt_data(data, length, 1, address);  
+    encrypt_data(data, length, 1, address);  
 
-            n =  W25Q128_pageWrite(sector, address, data, 16);
-            printf("page_write(0,10,d,26): n=%d\n",n);
+    n =  W25Q128_pageWrite(sector, address, data, 16);
+    printf("page_write(0,10,d,26): n=%d\n",n);
 
-        }
-        ```
+}
+```
 
     * `encrypt_data()` first read `security_register` using `read_security_register()` and save it on `key`. And xor with `data` which is doing encryption. But they leave the crc value same.
 
-        ```
-        // encrypts log events 
-        void encrypt_data(uint8_t *data, size_t data_length, uint8_t register_number, uint32_t address) {
-            uint8_t key[KEY_SIZE];
+```
+// encrypts log events 
+void encrypt_data(uint8_t *data, size_t data_length, uint8_t register_number, uint32_t address) {
+    uint8_t key[KEY_SIZE];
 
-            read_security_register(register_number, 0x52, key); // register, address
-            
-            printf("Data before encryption (including CRC):\n");
-            for(size_t i = 0; i < data_length; ++i) {
-                printf("%02X ", data[i]);
-            }
-            printf("\n");
+    read_security_register(register_number, 0x52, key); // register, address
+    
+    printf("Data before encryption (including CRC):\n");
+    for(size_t i = 0; i < data_length; ++i) {
+        printf("%02X ", data[i]);
+    }
+    printf("\n");
 
-            // Print the CRC32 checksum before encryption (assuming the original data includes CRC)
-            uint32_t crc_before_encryption = calculateCRC32(data, data_length - CRC_SIZE);
-            printf("CRC32 before encryption: 0x%08X\n", crc_before_encryption);
+    // Print the CRC32 checksum before encryption (assuming the original data includes CRC)
+    uint32_t crc_before_encryption = calculateCRC32(data, data_length - CRC_SIZE);
+    printf("CRC32 before encryption: 0x%08X\n", crc_before_encryption);
 
-            // Apply encryption to data, excluding CRC, using the key
-            for (size_t i = 0; i < data_length - CRC_SIZE; ++i) { // Exclude CRC data from encryption
-                data[i] ^= key[i % KEY_SIZE]; // Cycle through  key bytes
-            }
+    // Apply encryption to data, excluding CRC, using the key
+    for (size_t i = 0; i < data_length - CRC_SIZE; ++i) { // Exclude CRC data from encryption
+        data[i] ^= key[i % KEY_SIZE]; // Cycle through  key bytes
+    }
 
-            printf("Data after encryption (including CRC):\n");
-            for(size_t i = 0; i < data_length; ++i) {
-                printf("%02X ", data[i]);
-            }
-            printf("\n");
+    printf("Data after encryption (including CRC):\n");
+    for(size_t i = 0; i < data_length; ++i) {
+        printf("%02X ", data[i]);
+    }
+    printf("\n");
 
-        }
-        ```
+}
+```
 
 * So when the `log_event()` called, they make crc based on the `SmartLockEvent` structure. And enrypt the value of structure using `security_register`. Lastly write it on the flash. Then what we have to do is to decrypt the value in flash and edit the user_id in the structure. And regenerate crc for the integrity.
     * How can we get `security_register` value? It is written in the W25Q128 [datasheet](https://pdf1.alldatasheet.com/datasheet-pdf/view/506494/WINBOND/W25Q128FV.html). Yes as always. In page 70, there is *Read Security Registers* page. It says that we can read a security register using `0x48` command and pass 24-bit address and 1 dummy byte. The code was reading first security register at 0x52.
@@ -732,71 +732,71 @@ int log_event(const SmartLockEvent event, uint32_t sector, uint32_t address) {
 * We can get the `key` value using 0x48 command. So now we can decrypt the flash data. But the problem is crc. Let's check how crc is generated.
     * It is not that complicate. Just xor and shifting. To generate the crc with the edited log value, I chose to just make the C code same as this one.
 
-        ```
-        // CRC-32 calculation function
-        uint32_t calculateCRC32(const uint8_t *data, size_t length) {
-            uint32_t crc = 0xFFFFFFFF;
-            for (size_t i = 0; i < length; ++i) {
-                crc ^= data[i];
-                for (uint8_t j = 0; j < 8; ++j) {
-                    if (crc & 1)
-                        crc = (crc >> 1) ^ 0xEDB88320;
-                    else
-                        crc >>= 1;
-                }
-            }
-            return ~crc;
-        }        
-        ```
+```
+// CRC-32 calculation function
+uint32_t calculateCRC32(const uint8_t *data, size_t length) {
+        uint32_t crc = 0xFFFFFFFF;
+        for (size_t i = 0; i < length; ++i) {
+        crc ^= data[i];
+        for (uint8_t j = 0; j < 8; ++j) {
+                if (crc & 1)
+                crc = (crc >> 1) ^ 0xEDB88320;
+                else
+                crc >>= 1;
+        }
+        }
+        return ~crc;
+}        
+```
 
     * I just ran the C code with my edited log value. So that I can get the new crc. Check out `Figure17`.
 
-        ```
-        #include <stdio.h>
-        #include <stdint.h>
-        #include <stdbool.h>
-        #include <string.h>
+```
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
 
-        typedef struct {
-            uint32_t timestamp;   // Timestamp of the event
-            uint8_t eventType;    // Numeric code for type of event // 0 to 255 (0xFF)
-            uint16_t userId;      // Numeric user identifier // 0 t0 65535 (0xFFFF)
-            uint8_t method;       // Numeric code for unlock method
-            uint8_t status;       // Numeric code for status (success, failure)
-        } SmartLockEvent;
+typedef struct {
+        uint32_t timestamp;   // Timestamp of the event
+        uint8_t eventType;    // Numeric code for type of event // 0 to 255 (0xFF)
+        uint16_t userId;      // Numeric user identifier // 0 t0 65535 (0xFFFF)
+        uint8_t method;       // Numeric code for unlock method
+        uint8_t status;       // Numeric code for status (success, failure)
+} SmartLockEvent;
 
-        // CRC-32 calculation function
-        uint32_t calculateCRC32(const uint8_t *data, size_t length) {
-            uint32_t crc = 0xFFFFFFFF;
-            for (size_t i = 0; i < length; ++i) {
-                crc ^= data[i];
-                for (uint8_t j = 0; j < 8; ++j) {
-                    if (crc & 1)
-                        crc = (crc >> 1) ^ 0xEDB88320;
-                    else
-                        crc >>= 1;
-                }
-            }
-            return ~crc;
+// CRC-32 calculation function
+uint32_t calculateCRC32(const uint8_t *data, size_t length) {
+        uint32_t crc = 0xFFFFFFFF;
+        for (size_t i = 0; i < length; ++i) {
+        crc ^= data[i];
+        for (uint8_t j = 0; j < 8; ++j) {
+                if (crc & 1)
+                crc = (crc >> 1) ^ 0xEDB88320;
+                else
+                crc >>= 1;
         }
-
-        int main(){
-            uint8_t dat1[] = {35, 197, 21, 102, 214, 0, 160, 3, 1, 1, 0, 0, 207, 91, 108, 133};
-            uint8_t dat2[] = {191, 243, 21, 102, 187, 0, 160, 3, 3, 1, 0, 0, 236, 104, 129, 205};
-            uint8_t dat3[] = {227, 21, 22, 102, 187, 0, 160, 3, 3, 1, 0, 0, 134, 173, 71, 208};
-            uint8_t dat4[] = {239, 127, 22, 102, 214, 0, 160, 3, 3, 1, 0, 0, 209, 155, 216, 44};
-            uint32_t crc;
-            crc = calculateCRC32(dat1, 12);
-            printf("%x\n", crc);
-            crc = calculateCRC32(dat2, 12);
-            printf("%x\n", crc);
-            crc = calculateCRC32(dat3, 12);
-            printf("%x\n", crc);
-            crc = calculateCRC32(dat4, 12);
-            printf("%x\n", crc);
-            return 0;
         }
-        ```
+        return ~crc;
+}
+
+int main(){
+        uint8_t dat1[] = {35, 197, 21, 102, 214, 0, 160, 3, 1, 1, 0, 0, 207, 91, 108, 133};
+        uint8_t dat2[] = {191, 243, 21, 102, 187, 0, 160, 3, 3, 1, 0, 0, 236, 104, 129, 205};
+        uint8_t dat3[] = {227, 21, 22, 102, 187, 0, 160, 3, 3, 1, 0, 0, 134, 173, 71, 208};
+        uint8_t dat4[] = {239, 127, 22, 102, 214, 0, 160, 3, 3, 1, 0, 0, 209, 155, 216, 44};
+        uint32_t crc;
+        crc = calculateCRC32(dat1, 12);
+        printf("%x\n", crc);
+        crc = calculateCRC32(dat2, 12);
+        printf("%x\n", crc);
+        crc = calculateCRC32(dat3, 12);
+        printf("%x\n", crc);
+        crc = calculateCRC32(dat4, 12);
+        printf("%x\n", crc);
+        return 0;
+}
+```
 
 * Check out `Figure18` to see the final exploit code. I first read the security register and 0x9c0 where the `user_id` 0x5244 is placed.
     * If you want to write new data in the flash, you have to erase that area and write it. Not overwrite. So we got to remove the data in 0x9c0 but it wasn't available to remove only that part. But to just erase by Sector(0x1000 bytes).
