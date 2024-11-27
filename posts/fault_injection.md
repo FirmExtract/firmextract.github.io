@@ -231,7 +231,7 @@ Then I clicked the button with only one switch on and below image was shown on o
 <img src="https://github.com/FirmExtract/FirmExtract-Posts/blob/main/Fault%20injection%20attack%20with%20PIC%20and%20FPGA/images/seconds.jpg?raw=true" width="100%">
 Wait.. What? It's way long seconds than pic's 500nS!!
 
-Well the problem with PIC was not because it's time is to long. It was because it was too short.
+Well the problem with PIC was not because it's time is too long. It was because it was too short.
 
 Anyways, we succeed with using FPGA.
 Now let's make the voltage glitching working with PIC too!
